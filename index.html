@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>SETCLICK | Кликер с Firebase</title>
+    <title>SETCLICK | Вход + Восстановление пароля</title>
     <style>
         * {
             margin: 0;
@@ -13,198 +13,160 @@
         }
         body {
             background: linear-gradient(135deg, #0a0f1e 0%, #0c1222 100%);
-            padding: 20px;
             min-height: 100vh;
-        }
-        .dashboard {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-        }
-        .main-column {
-            flex: 2;
-            min-width: 280px;
-        }
-        .right-column {
-            flex: 1.4;
-            min-width: 300px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-        .card {
-            background: rgba(18, 25, 45, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 20px 24px;
-            border: 1px solid rgba(255, 215, 0, 0.25);
-            box-shadow: 0 20px 35px -10px black;
-        }
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ffdf8c;
-            border-left: 5px solid #f5b042;
-            padding-left: 16px;
-            margin-bottom: 18px;
-        }
-        .clicker-area {
-            text-align: center;
-            background: linear-gradient(145deg, #1e2a3a, #0f1722);
-            border-radius: 48px;
-            padding: 20px;
-        }
-        .balance-row {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
+            align-items: center;
+            padding: 20px;
         }
-        .balance-card {
-            background: #000000aa;
+        .card {
+            max-width: 450px;
+            width: 100%;
+            background: rgba(18, 25, 45, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 32px;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 20px 35px -10px black;
+        }
+        h1 {
+            color: #ffdf8c;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            background: #0f1422;
+            border: 1px solid #ffcc66;
             border-radius: 60px;
-            padding: 10px 24px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        input::placeholder {
+            color: #888;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #e67e22;
+            border: none;
+            border-radius: 60px;
             font-weight: bold;
-            font-size: 1.5rem;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.1s;
+        }
+        button:active { transform: scale(0.97); }
+        .btn-secondary {
+            background: #2c3e66;
+        }
+        .btn-reset {
+            background: transparent;
+            border: 1px solid #ffaa55;
+            color: #ffaa55;
+            margin-top: 12px;
+        }
+        .switch-link {
+            text-align: center;
+            margin-top: 16px;
+            color: #ffcc66;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .error {
+            color: #ff8888;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .success {
+            color: #88ff88;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .game-panel {
+            display: none;
+        }
+        .balance {
+            font-size: 2rem;
+            text-align: center;
+            margin: 20px 0;
             color: #ffecb3;
         }
         .click-btn {
             background: radial-gradient(circle at 30% 20%, #f9b43a, #e67e22);
-            border: none;
-            font-size: 3rem;
-            font-weight: bold;
-            padding: 15px 30px;
-            width: 90%;
-            border-radius: 120px;
-            cursor: pointer;
-            box-shadow: 0 12px 0 #b45f1b;
-            transition: 0.05s linear;
-            margin: 10px 0;
+            font-size: 2rem;
+            padding: 20px;
+            box-shadow: 0 8px 0 #b45f1b;
         }
-        .click-btn:active { transform: translateY(6px); box-shadow: 0 5px 0 #b45f1b; }
-        button {
-            background: #2c3e66;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: 0.1s;
+        .logout-btn {
+            background: #b53b2e;
+            margin-top: 16px;
         }
-        button:active { transform: scale(0.97); }
-        .flex-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
-        .role-badge { font-size: 0.7rem; background: #000000aa; border-radius: 16px; padding: 4px 12px; }
-        hr { border-color: #ffaa3355; margin: 12px 0; }
-        .input-dark {
-            background: #0f1422;
-            border: 1px solid #ffcc66;
-            border-radius: 30px;
-            padding: 8px 14px;
-            color: white;
-            width: 100%;
+        .user-info {
+            text-align: center;
+            margin-bottom: 16px;
+            color: #ccc;
         }
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            color: #ddd;
-        }
-        .leaderboard-table td, .leaderboard-table th {
-            padding: 8px 6px;
-            border-bottom: 1px solid #ffd96655;
-        }
-        .report-item, .message-item {
-            background: #00000055;
+        .role-badge {
+            display: inline-block;
+            background: #000000aa;
             border-radius: 20px;
-            padding: 8px 12px;
-            margin: 8px 0;
-            font-size: 0.85rem;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-<div class="dashboard">
-    <div class="main-column">
-        <div class="card">
-            <div class="card-title">💎 SETCLICK 💎</div>
-            <div class="clicker-area">
-                <div class="balance-row">
-                    <div class="balance-card">💰 ОСН. СЧЁТ: <span id="mainBalance">0</span></div>
-                    <div class="balance-card">⭐ VIP СЧЁТ: <span id="vipBalance">0</span></div>
-                </div>
-                <button class="click-btn" id="clickMainBtn">🔥 КЛИК 🔥</button>
-                <div>➕ Сила клика: <strong id="clickPower">1</strong></div>
-                <div class="flex-row" style="justify-content:center;">
-                    <button id="upgradePotionBtn">🧪 Улучшить зелье (ур. <span id="potionLvl">0</span>)</button>
-                    <button id="buyPotionBtn">💊 Купить зелье</button>
-                </div>
-                <div id="potionStatus" class="role-badge">⚗️ Зелье: не активно</div>
-            </div>
-        </div>
 
-        <div class="card">
-            <div class="card-title">🐞 БАГ-РЕПОРТЫ</div>
-            <textarea id="bugText" rows="2" class="input-dark" placeholder="Опиши баг..."></textarea>
-            <div class="flex-row">
-                <button id="sendBugBtn">📩 Отправить</button>
-                <button id="clearReportsBtn" class="danger">🗑️ Очистить</button>
-            </div>
-            <div id="reportsList" style="max-height:150px; overflow-y:auto; margin-top:12px;"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-title">💬 ЦЕНТР СООБЩЕНИЙ</div>
-            <input type="text" id="msgInput" class="input-dark" placeholder="Текст...">
-            <div class="flex-row">
-                <button id="sendGlobalMsgBtn">📢 Отправить</button>
-                <select id="msgTargetRole" class="input-dark" style="width:auto;">
-                    <option value="all">Всем</option>
-                    <option value="admin">Админам</option>
-                </select>
-            </div>
-            <div id="messagesCenter" style="max-height:180px; overflow-y:auto; margin-top:12px;"></div>
-        </div>
+<!-- Панель входа/регистрации -->
+<div id="authPanel" class="card">
+    <h1>🔥 SETCLICK 🔥</h1>
+    <div class="input-group">
+        <input type="email" id="emailInput" placeholder="Почта (логин)">
     </div>
-
-    <div class="right-column">
-        <div class="card">
-            <div class="card-title">🏆 ЛИДЕРБОРД</div>
-            <input type="text" id="playerNameInput" class="input-dark" placeholder="Ваше имя" value="Игрок">
-            <button id="changeNameBtn" style="margin-top:8px;">Обновить имя</button>
-            <table class="leaderboard-table" style="margin-top:12px;">
-                <thead><tr><th>#</th><th>Имя</th><th>Роль</th><th>💰</th></tr></thead>
-                <tbody id="leaderboardBody"></tbody>
-            </table>
-        </div>
-
-        <div class="card">
-            <div class="card-title">👑 АДМИН-ПАНЕЛЬ</div>
-            <div id="adminRoleDisplay" class="role-badge">Загрузка...</div>
-            <div class="flex-row">
-                <select id="roleSelect">
-                    <option value="owner">Владелец</option>
-                    <option value="admin">Админ</option>
-                    <option value="moder">Модер</option>
-                    <option value="user">Игрок</option>
-                </select>
-                <button id="applyRoleBtn">Сменить роль</button>
-            </div>
-            <hr>
-            <div class="flex-row"><input type="number" id="adminAmount" placeholder="Сумма" value="1000" class="input-dark"><button id="addMoneyMainBtn" class="success">➕ Добавить (осн)</button><button id="addMoneyVipBtn" class="success">⭐ Добавить VIP</button></div>
-            <div class="flex-row"><button id="setMoneyMainBtn" class="warning">🎯 Установить осн.</button><button id="removeMoneyBtn" class="danger">➖ Забрать (осн)</button></div>
-            <div class="flex-row"><button id="banUserBtn" class="danger">🚫 Забанить</button><input id="banNameInput" placeholder="ник" class="input-dark"></div>
-            <div class="flex-row"><button id="unbanUserBtn" class="warning">🔓 Разбанить</button><button id="resetGameBtn" class="danger">⚠️ Сброс (владелец)</button></div>
-            <div id="banListDisplay" style="font-size:0.7rem; margin-top:8px;">Забаненные: нет</div>
-        </div>
+    <div class="input-group">
+        <input type="password" id="passwordInput" placeholder="Пароль (придумай свой)">
     </div>
+    <button id="loginBtn">🔐 Войти</button>
+    <button id="registerBtn" class="btn-secondary">📝 Зарегистрироваться</button>
+    <button id="resetPasswordBtn" class="btn-reset">❓ Забыл пароль</button>
+    <div id="authMessage"></div>
+</div>
+
+<!-- Игровая панель (после входа) -->
+<div id="gamePanel" class="card game-panel">
+    <h1>🔥 SETCLICK 🔥</h1>
+    <div class="user-info" id="userInfo"></div>
+    <div class="balance">💰 <span id="moneyDisplay">0</span> 🪙</div>
+    <button id="clickBtn" class="click-btn">💥 КЛИК 💥</button>
+    <div>➕ Сила клика: <strong id="clickPower">1</strong></div>
+    <div class="flex-row">
+        <button id="upgradePotionBtn">🧪 Улучшить зелье (ур. <span id="potionLvl">0</span>)</button>
+        <button id="buyPotionBtn">💊 Купить зелье</button>
+    </div>
+    <div id="potionStatus" class="role-badge">⚗️ Зелье: не активно</div>
+    <button id="logoutBtnGame" class="logout-btn">🚪 Выйти</button>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getDatabase, ref, set, get, update, onValue, remove } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getDatabase, ref, get, set, update, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyB-0kywlbxj-PRLL7KPPlhpRRx_caYKL9Q",
@@ -218,212 +180,219 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getDatabase(app);
 
-    let currentUser = null;
+    // === НАСТРОЙКА: укажи почту владельца (кто получит роль owner) ===
+    const OWNER_EMAIL = "akkountnik@gmail.com";  // 🔥 ЗАМЕНИ НА СВОЮ ПОЧТУ!
+
+    let currentUserData = null;
     let potionTimer = null;
 
-    async function getCurrentUserId() {
-        let id = localStorage.getItem("clicker_user_id");
-        if (!id) {
-            id = "user_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6);
-            localStorage.setItem("clicker_user_id", id);
-        }
-        return id;
-    }
-
-    async function loadOrCreateUser() {
-        const userId = await getCurrentUserId();
-        const userRef = ref(db, `users/${userId}`);
+    async function createOrUpdateUserInDB(user) {
+        const userRef = ref(db, `users/${user.uid}`);
         const snapshot = await get(userRef);
         
-        if (snapshot.exists()) {
-            currentUser = snapshot.val();
-            currentUser.id = userId;
-        } else {
-            currentUser = {
-                name: "Игрок_" + Math.floor(Math.random() * 10000),
-                role: "user",
+        let role = "user";
+        if (user.email === OWNER_EMAIL) role = "owner";
+        
+        if (!snapshot.exists()) {
+            await set(userRef, {
+                email: user.email,
+                name: user.email.split('@')[0],
+                role: role,
                 mainMoney: 500,
                 vipMoney: 0,
                 isBanned: false,
                 potionLevel: 0,
                 potionActive: false,
-                potionEndTime: 0
-            };
-            await set(userRef, currentUser);
-            currentUser.id = userId;
+                potionEndTime: 0,
+                createdAt: Date.now()
+            });
+        } else {
+            const existing = snapshot.val();
+            if (user.email === OWNER_EMAIL && existing.role !== "owner") {
+                await update(userRef, { role: "owner" });
+                role = "owner";
+            }
         }
-        
-        if (currentUser.potionActive && currentUser.potionEndTime < Date.now()) {
-            currentUser.potionActive = false;
-            await update(userRef, { potionActive: false, potionEndTime: 0 });
-        }
-        return currentUser;
+        return role;
     }
 
-    async function updateUser(data) {
-        await update(ref(db, `users/${currentUser.id}`), data);
-        Object.assign(currentUser, data);
-        refreshUI();
-    }
-
-    function getClickPower() {
+    function getClickPower(userData) {
         let bonus = 0;
-        if (currentUser.potionActive) {
-            bonus = 3 + (currentUser.potionLevel || 0) * 2;
+        if (userData.potionActive && userData.potionEndTime > Date.now()) {
+            bonus = 3 + (userData.potionLevel || 0) * 2;
         }
         return 1 + bonus;
     }
 
-    function refreshUI() {
-        if (!currentUser) return;
-        document.getElementById('mainBalance').innerText = Math.floor(currentUser.mainMoney);
-        document.getElementById('vipBalance').innerText = Math.floor(currentUser.vipMoney);
-        document.getElementById('clickPower').innerText = getClickPower();
-        document.getElementById('potionLvl').innerText = currentUser.potionLevel || 0;
-        if (currentUser.potionActive) {
-            let remaining = Math.max(0, Math.ceil((currentUser.potionEndTime - Date.now()) / 1000));
-            document.getElementById('potionStatus').innerHTML = `⚗️ Зелье АКТИВНО (${remaining} сек) +${3 + (currentUser.potionLevel||0)*2} силы`;
+    function refreshGameUI(userData) {
+        document.getElementById('moneyDisplay').innerText = Math.floor(userData.mainMoney);
+        document.getElementById('clickPower').innerText = getClickPower(userData);
+        document.getElementById('potionLvl').innerText = userData.potionLevel || 0;
+        
+        const isActive = userData.potionActive && userData.potionEndTime > Date.now();
+        if (isActive) {
+            let remaining = Math.max(0, Math.ceil((userData.potionEndTime - Date.now()) / 1000));
+            document.getElementById('potionStatus').innerHTML = `⚗️ Зелье АКТИВНО (${remaining} сек) +${3 + (userData.potionLevel||0)*2} силы`;
         } else {
             document.getElementById('potionStatus').innerHTML = `⚗️ Зелье не активно`;
         }
-        document.getElementById('adminRoleDisplay').innerHTML = `👤 ${currentUser.name} | Роль: ${currentUser.role} ${currentUser.isBanned ? '❌ ЗАБАНЕН' : ''}`;
-        document.getElementById('clickMainBtn').disabled = currentUser.isBanned;
-    }
-
-    function listenLeaderboard() {
-        onValue(ref(db, 'users'), (snapshot) => {
-            const users = snapshot.val();
-            if (!users) return;
-            const list = Object.values(users).filter(u => !u.isBanned).sort((a,b) => (b.mainMoney + b.vipMoney) - (a.mainMoney + a.vipMoney));
-            const tbody = document.getElementById('leaderboardBody');
-            tbody.innerHTML = '';
-            list.slice(0, 20).forEach((u, idx) => {
-                const row = tbody.insertRow();
-                row.insertCell(0).innerText = idx+1;
-                row.insertCell(1).innerHTML = u.name + (u.role === 'owner' ? ' 👑' : (u.role === 'admin' ? ' 🛡️' : ''));
-                row.insertCell(2).innerText = u.role;
-                row.insertCell(3).innerText = (u.mainMoney + u.vipMoney);
-            });
-        });
-    }
-
-    function listenReports() {
-        onValue(ref(db, 'reports'), (snapshot) => {
-            const reports = snapshot.val();
-            const container = document.getElementById('reportsList');
-            if (!reports || Object.keys(reports).length === 0) {
-                container.innerHTML = '<i>Нет репортов</i>';
-                return;
-            }
-            container.innerHTML = Object.entries(reports).map(([id, r]) => `<div class="report-item">📌 ${r.text} <small>от ${r.author}</small></div>`).join('');
-        });
-    }
-
-    function listenMessages() {
-        onValue(ref(db, 'messages'), (snapshot) => {
-            const msgs = snapshot.val();
-            const container = document.getElementById('messagesCenter');
-            if (!msgs || Object.keys(msgs).length === 0) {
-                container.innerHTML = '<i>Нет сообщений</i>';
-                return;
-            }
-            container.innerHTML = Object.entries(msgs).sort((a,b) => b[1].time - a[1].time).slice(0, 20).map(([id, m]) => `<div class="message-item">💬 ${m.text} <small>(${m.target === 'all' ? 'всем' : 'админам'})</small><br><span style="font-size:0.7rem;">${m.author}</span></div>`).join('');
-        });
-    }
-
-    function listenBans() {
-        onValue(ref(db, 'users'), (snapshot) => {
-            const users = snapshot.val();
-            if (!users) return;
-            const banned = Object.values(users).filter(u => u.isBanned).map(u => u.name).join(', ');
-            document.getElementById('banListDisplay').innerHTML = `🚫 Забаненные: ${banned || 'нет'}`;
-        });
-    }
-
-    async function handleClick() {
-        if (currentUser.isBanned) { alert("Вы забанены!"); return; }
-        await updateUser({ mainMoney: currentUser.mainMoney + getClickPower() });
-    }
-
-    async function buyPotion() {
-        let cost = 80 + (currentUser.potionLevel || 0) * 25;
-        if (currentUser.mainMoney >= cost) {
-            await updateUser({ mainMoney: currentUser.mainMoney - cost });
-            const endTime = Date.now() + 25000;
-            await updateUser({ potionActive: true, potionEndTime: endTime });
-            if (potionTimer) clearInterval(potionTimer);
-            potionTimer = setInterval(async () => {
-                if (currentUser.potionActive && currentUser.potionEndTime < Date.now()) {
-                    await updateUser({ potionActive: false, potionEndTime: 0 });
-                    clearInterval(potionTimer);
-                }
-                refreshUI();
-            }, 500);
-        } else alert(`Не хватает ${cost} монет`);
-    }
-
-    async function upgradePotion() {
-        let cost = 120 + (currentUser.potionLevel || 0) * 35;
-        if (currentUser.mainMoney >= cost) {
-            await updateUser({ mainMoney: currentUser.mainMoney - cost, potionLevel: (currentUser.potionLevel || 0) + 1 });
-        } else alert(`Не хватает ${cost}`);
-    }
-
-    function canManageMoney() { return currentUser.role === 'owner' || currentUser.role === 'admin'; }
-    function canBan() { return currentUser.role === 'owner' || currentUser.role === 'admin'; }
-    function canReset() { return currentUser.role === 'owner'; }
-
-    async function changeMoney(targetName, deltaMain, deltaVip) {
-        if (!canManageMoney()) { alert("Нет прав"); return; }
-        const snapshot = await get(ref(db, 'users'));
-        const users = snapshot.val();
-        const userId = Object.keys(users).find(id => users[id].name === targetName);
-        if (!userId) { alert("Игрок не найден"); return; }
-        const user = users[userId];
-        if (user.isBanned) { alert("Игрок забанен"); return; }
-        await update(ref(db, `users/${userId}`), { mainMoney: Math.max(0, user.mainMoney + deltaMain), vipMoney: Math.max(0, user.vipMoney + deltaVip) });
-    }
-
-    function setupEvents() {
-        document.getElementById('clickMainBtn').onclick = handleClick;
-        document.getElementById('buyPotionBtn').onclick = buyPotion;
-        document.getElementById('upgradePotionBtn').onclick = upgradePotion;
         
-        document.getElementById('addMoneyMainBtn').onclick = async () => { let name = prompt("Имя:"); if(name) await changeMoney(name, parseInt(document.getElementById('adminAmount').value)||0, 0); };
-        document.getElementById('addMoneyVipBtn').onclick = async () => { let name = prompt("Имя:"); if(name) await changeMoney(name, 0, parseInt(document.getElementById('adminAmount').value)||0); };
+        document.getElementById('userInfo').innerHTML = `
+            👤 ${userData.name || userData.email.split('@')[0]}<br>
+            🎭 Роль: ${userData.role} ${userData.isBanned ? '❌ ЗАБАНЕН' : ''}
+        `;
         
-        document.getElementById('sendBugBtn').onclick = async () => { let text = document.getElementById('bugText').value; if(text) { await set(ref(db, `reports/${Date.now()}`), { text, author: currentUser.name, time: Date.now() }); document.getElementById('bugText').value = ''; } };
-        document.getElementById('sendGlobalMsgBtn').onclick = async () => { let text = document.getElementById('msgInput').value; let target = document.getElementById('msgTargetRole').value; if(text && (currentUser.role === 'owner' || currentUser.role === 'admin' || currentUser.role === 'moder')) { await set(ref(db, `messages/${Date.now()}`), { text, target, author: currentUser.name, time: Date.now() }); document.getElementById('msgInput').value = ''; } else alert("Нет прав"); };
-        document.getElementById('changeNameBtn').onclick = async () => { let newName = document.getElementById('playerNameInput').value; if(newName) await updateUser({ name: newName }); };
-        document.getElementById('applyRoleBtn').onclick = async () => { if(currentUser.role === 'owner') await updateUser({ role: document.getElementById('roleSelect').value }); else alert("Только владелец"); };
-        document.getElementById('banUserBtn').onclick = async () => { if(!canBan()) return; let name = document.getElementById('banNameInput').value; const snapshot = await get(ref(db, 'users')); const users = snapshot.val(); const userId = Object.keys(users).find(id => users[id].name === name); if(userId) await update(ref(db, `users/${userId}`), { isBanned: true }); };
-        document.getElementById('unbanUserBtn').onclick = async () => { if(!canBan()) return; let name = document.getElementById('banNameInput').value; const snapshot = await get(ref(db, 'users')); const users = snapshot.val(); const userId = Object.keys(users).find(id => users[id].name === name); if(userId) await update(ref(db, `users/${userId}`), { isBanned: false }); };
-        document.getElementById('resetGameBtn').onclick = async () => { if(canReset() && confirm("Сбросить ВСЕХ?")) { await remove(ref(db, 'users')); await remove(ref(db, 'reports')); await remove(ref(db, 'messages')); alert("Сброшено"); location.reload(); } };
-        document.getElementById('clearReportsBtn').onclick = async () => { if(currentUser.role === 'owner' || currentUser.role === 'admin' || currentUser.role === 'moder') await remove(ref(db, 'reports')); else alert("Нет прав"); };
+        const clickBtn = document.getElementById('clickBtn');
+        if (clickBtn) clickBtn.disabled = userData.isBanned;
     }
 
-    async function init() {
-        await loadOrCreateUser();
-        refreshUI();
-        listenLeaderboard();
-        listenReports();
-        listenMessages();
-        listenBans();
-        setupEvents();
-        if (currentUser.potionActive && currentUser.potionEndTime > Date.now()) {
-            potionTimer = setInterval(async () => {
-                if (currentUser.potionActive && currentUser.potionEndTime < Date.now()) {
-                    await updateUser({ potionActive: false, potionEndTime: 0 });
-                    clearInterval(potionTimer);
-                }
-                refreshUI();
-            }, 500);
+    async function updateUserInDB(uid, data) {
+        await update(ref(db, `users/${uid}`), data);
+    }
+
+    async function handleClick(uid, userData) {
+        if (userData.isBanned) {
+            alert("Вы забанены!");
+            return;
         }
-        console.log("✅ Firebase подключён!");
+        const gain = getClickPower(userData);
+        const newMoney = userData.mainMoney + gain;
+        await updateUserInDB(uid, { mainMoney: newMoney });
     }
-    init();
+
+    async function buyPotion(uid, userData) {
+        const cost = 80 + (userData.potionLevel || 0) * 25;
+        if (userData.mainMoney >= cost && !userData.isBanned) {
+            await updateUserInDB(uid, { mainMoney: userData.mainMoney - cost });
+            const endTime = Date.now() + 25000;
+            await updateUserInDB(uid, { potionActive: true, potionEndTime: endTime });
+            startPotionTimer(uid);
+        } else {
+            alert(`Не хватает ${cost} монет`);
+        }
+    }
+
+    async function upgradePotion(uid, userData) {
+        const cost = 120 + (userData.potionLevel || 0) * 35;
+        if (userData.mainMoney >= cost && !userData.isBanned) {
+            await updateUserInDB(uid, { 
+                mainMoney: userData.mainMoney - cost, 
+                potionLevel: (userData.potionLevel || 0) + 1 
+            });
+        } else {
+            alert(`Не хватает ${cost} монет`);
+        }
+    }
+
+    function startPotionTimer(uid) {
+        if (potionTimer) clearInterval(potionTimer);
+        potionTimer = setInterval(async () => {
+            const userRef = ref(db, `users/${uid}`);
+            const snapshot = await get(userRef);
+            const userData = snapshot.val();
+            if (userData && userData.potionActive && userData.potionEndTime < Date.now()) {
+                await updateUserInDB(uid, { potionActive: false, potionEndTime: 0 });
+                clearInterval(potionTimer);
+                potionTimer = null;
+            }
+            const fresh = await get(userRef);
+            if (fresh.exists()) refreshGameUI(fresh.val());
+        }, 500);
+    }
+
+    function setupGameListeners(uid) {
+        const userRef = ref(db, `users/${uid}`);
+        onValue(userRef, (snapshot) => {
+            if (snapshot.exists()) {
+                currentUserData = snapshot.val();
+                refreshGameUI(currentUserData);
+            }
+        });
+        
+        document.getElementById('clickBtn').onclick = () => handleClick(uid, currentUserData);
+        document.getElementById('buyPotionBtn').onclick = () => buyPotion(uid, currentUserData);
+        document.getElementById('upgradePotionBtn').onclick = () => upgradePotion(uid, currentUserData);
+        document.getElementById('logoutBtnGame').onclick = () => signOut(auth);
+    }
+
+    // === АВТОРИЗАЦИЯ ===
+    const authPanel = document.getElementById('authPanel');
+    const gamePanel = document.getElementById('gamePanel');
+    const authMessage = document.getElementById('authMessage');
+
+    function showMessage(text, isError = true) {
+        authMessage.innerHTML = `<div class="${isError ? 'error' : 'success'}">${text}</div>`;
+        setTimeout(() => authMessage.innerHTML = '', 3000);
+    }
+
+    document.getElementById('loginBtn').onclick = async () => {
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passwordInput').value;
+        if (!email || !password) { showMessage("Заполни оба поля"); return; }
+        try {
+            const userCred = await signInWithEmailAndPassword(auth, email, password);
+            await createOrUpdateUserInDB(userCred.user);
+            showMessage("Вход выполнен!", false);
+        } catch (err) {
+            showMessage("Ошибка: " + (err.message === 'Firebase: Error (auth/invalid-credential).' ? 'Неверная почта или пароль' : err.message));
+        }
+    };
+
+    document.getElementById('registerBtn').onclick = async () => {
+        const email = document.getElementById('emailInput').value;
+        const password = document.getElementById('passwordInput').value;
+        if (!email || !password) { showMessage("Заполни оба поля"); return; }
+        if (password.length < 6) { showMessage("Пароль должен быть не менее 6 символов"); return; }
+        try {
+            const userCred = await createUserWithEmailAndPassword(auth, email, password);
+            await createOrUpdateUserInDB(userCred.user);
+            showMessage("Регистрация успешна!", false);
+        } catch (err) {
+            if (err.message.includes('email-already-in-use')) showMessage("Эта почта уже зарегистрирована");
+            else showMessage("Ошибка: " + err.message);
+        }
+    };
+
+    document.getElementById('resetPasswordBtn').onclick = async () => {
+        const email = document.getElementById('emailInput').value;
+        if (!email) { showMessage("Введи почту для сброса пароля"); return; }
+        try {
+            await sendPasswordResetEmail(auth, email);
+            showMessage("Письмо для сброса пароля отправлено на " + email, false);
+        } catch (err) {
+            showMessage("Ошибка: " + (err.message.includes('user-not-found') ? 'Пользователь не найден' : err.message));
+        }
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            await createOrUpdateUserInDB(user);
+            const userData = await get(ref(db, `users/${user.uid}`));
+            if (userData.exists() && userData.val().isBanned) {
+                alert("Ваш аккаунт забанен!");
+                await signOut(auth);
+                return;
+            }
+            authPanel.style.display = 'none';
+            gamePanel.style.display = 'block';
+            setupGameListeners(user.uid);
+            const snapshot = await get(ref(db, `users/${user.uid}`));
+            if (snapshot.exists()) {
+                currentUserData = snapshot.val();
+                refreshGameUI(currentUserData);
+                if (currentUserData.potionActive && currentUserData.potionEndTime > Date.now()) startPotionTimer(user.uid);
+            }
+        } else {
+            if (potionTimer) clearInterval(potionTimer);
+            authPanel.style.display = 'block';
+            gamePanel.style.display = 'none';
+            document.getElementById('emailInput').value = '';
+            document.getElementById('passwordInput').value = '';
+        }
+    });
 </script>
 </body>
 </html>
